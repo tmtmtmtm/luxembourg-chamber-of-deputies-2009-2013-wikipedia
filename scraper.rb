@@ -25,7 +25,7 @@ class MembersPage < Scraped::HTML
   private
 
   def member_rows
-    noko.xpath('//table[.//th[contains(.,"Circonscription")]][1]//tr[td]')
+    noko.xpath('//table[.//th[contains(.,"Circonscription")]]//tr[td]')
   end
 end
 
@@ -54,11 +54,41 @@ class MemberRow < Scraped::HTML
     tds[4].text.tidy
   end
 
+  field :end_date do
+    return unless tds[6]
+
+    tds[6].css('time/@datetime').text
+  end
+
+  field :cause do
+    return unless causeLabel
+
+    CAUSE_LOOKUP.fetch(causeLabel)
+  end
+
+  field :causeLabel do
+    return unless tds[5]
+
+    tds[5].text.tidy
+  end
+
+  field :replaced_by do
+    return unless tds[7]
+
+    tds[7].xpath('.//a/@wikidata').map(&:text).first
+  end
+
   private
 
   def tds
     noko.css('td')
   end
+
+  CAUSE_LOOKUP = {
+    'Démission' => 'Q796919',
+    'Nomination dans le gouvernement' => 'Q51188211',
+    'Mort en fonction' => 'Q5247364'
+  }.freeze
 end
 
 url = 'https://fr.wikipedia.org/wiki/Liste_des_d%C3%A9put%C3%A9s_de_la_l%C3%A9gislature_2009-2013_de_la_Chambre_des_d%C3%A9put%C3%A9s_du_Luxembourg'
