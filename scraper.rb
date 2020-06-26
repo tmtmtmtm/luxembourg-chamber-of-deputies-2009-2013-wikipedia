@@ -64,7 +64,6 @@ end
 url = 'https://fr.wikipedia.org/wiki/Liste_des_d%C3%A9put%C3%A9s_de_la_l%C3%A9gislature_2009-2013_de_la_Chambre_des_d%C3%A9put%C3%A9s_du_Luxembourg'
 data = Scraped::Scraper.new(url => MembersPage).scraper.members
 
-OUTFILE = Pathname.new('wikipedia.csv')
 header = data.first.keys.to_csv
 rows = data.map { |row| row.values.to_csv }
-OUTFILE.write(header + rows.join)
+puts header + rows.join
