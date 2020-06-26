@@ -38,19 +38,19 @@ class MemberRow < Scraped::HTML
     tds[1].xpath('.//a').text
   end
 
-  field :areaid do
+  field :area do
     tds[2].xpath('.//a/@wikidata').text
   end
 
-  field :area do
+  field :areaLabel do
     tds[2].text.tidy
   end
 
-  field :partyid do
+  field :party do
     tds[4].xpath('.//a/@wikidata').text
   end
 
-  field :party do
+  field :partyLabel do
     tds[4].text.tidy
   end
 
